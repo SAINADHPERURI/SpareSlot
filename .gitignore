@@ -13,3 +13,4 @@ e2e/playwright-report/
 *.log
 # local Claude Code worktrees
 .claude/worktrees/
+e2e/.auth/

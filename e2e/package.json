@@ -1,0 +1,13 @@
+{
+  "name": "spareslot-e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "golden": "node golden_path.mjs",
+    "test": "playwright test",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.48.2"
+  }
+}

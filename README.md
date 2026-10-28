@@ -166,6 +166,24 @@ Know these limits of the free plan:
 - **Database lifetime:** the free database expires after 30 days.
 - **Stale demo data:** demo dates are relative to the first start, so reset the database shortly before judging.
 
+### Fresh demo data before judging
+
+Demo dates are relative to the first start. To get "upcoming" bookings that are really upcoming, and to remove
+test accounts, replace the demo database a few hours before judging.
+
+There is deliberately no reset button in the app: the audit log is append-only (CLAUDE.md rule 7), so the app can
+never wipe it. Replacing the whole database is an infrastructure action, for this demo environment only:
+
+1. In Render, open `spareslot-db` and choose **Settings > Delete Database**. Confirm by typing its name. This
+   permanently deletes all its data.
+2. Open **Blueprints**, choose this repository's blueprint, and click **Manual Sync**. It creates `spareslot-db`
+   again and links it to the API.
+3. Open `spareslot-sainadh-api` and choose **Manual Deploy > Deploy latest commit**. On start, Flyway creates the
+   schema and loads the fictional demo seed.
+4. Check the deployment with `BASE_URL=https://spareslot-sainadh-api.onrender.com node e2e/golden_path.mjs`. This
+   adds one closed booking for Asha, which is harmless. Skip the browser suite on the fresh database, because it
+   creates test accounts.
+
 ## Repository
 
 | Folder | Contents |

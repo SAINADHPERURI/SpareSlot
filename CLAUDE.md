@@ -33,7 +33,8 @@ Never edit an existing migration. Add a new one in your own number range.
 3. The actor id and role always come from the JWT, never from the request body.
 4. Rule failures at request time return 422 with `{code, message, rule}` and create no booking.
 5. A person decides every approval, rejection, dispute, deposit forfeit and deposit refund after a return. The
-   system may only waitlist, promote from the waitlist, raise overdue incidents, and refund a deposit when a
+   system may only waitlist, promote from the waitlist, close a waitlisted request that is still waitlisted 24 hours
+   after joining or whose start time has passed (V11), raise overdue incidents, and refund a deposit when a
    booking is cancelled before pickup, and each of those writes a reason.
 6. The frontend reads `allowedActions` from the server and never reimplements the state machine.
 7. `audit_events` is append-only. Do not write code that updates or deletes it.

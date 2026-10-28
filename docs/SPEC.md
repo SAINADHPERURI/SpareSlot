@@ -58,7 +58,7 @@ stateDiagram-v2
     requested --> cancelled: requester, reason
     waitlisted --> approved: owner, manager or system, reason
     waitlisted --> rejected: owner or manager, reason
-    waitlisted --> cancelled: requester, reason
+    waitlisted --> cancelled: requester or system (expiry), reason
     approved --> checked_in: owner or manager, condition record, deposit paid or waived
     approved --> cancelled: requester, owner or manager, reason
     checked_in --> returned: owner or manager, condition record
@@ -107,6 +107,11 @@ Waitlist order: fewest hours in the last 30 days (`v_recent_usage_30d`), then ea
 When an approved booking is cancelled, the system offers the slot to the first waitlisted request that fits,
 moving it to `approved` with the ranking as the reason, and notifies the manager, who may cancel it with a reason.
 Rejections are only ever made by people.
+
+Waitlist expiry (decided 2026-10-28, migration V11): a request still `waitlisted` 24 hours after it joined the
+waitlist, or whose start time has passed, is moved to `cancelled` by the system with a reason that says so; the
+borrower is notified and can request again. V11 adds `system` to the allowed roles of `waitlisted -> cancelled`.
+A waitlist reason is a snapshot ("you joined the waitlist at number N"); the live position is shown separately.
 
 The security deposit starts after approval and is described in section 4b. It plays no part in the checks above.
 

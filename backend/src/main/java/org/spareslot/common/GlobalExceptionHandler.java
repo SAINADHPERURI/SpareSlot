@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ApiException.class)
     ResponseEntity<ErrorBody> api(ApiException e) {
-        return ResponseEntity.status(e.status()).body(new ErrorBody(e.code(), e.getMessage(), e.rule()));
+        return ResponseEntity.status(e.status()).body(new ErrorBody(e.code(), e.getMessage(), e.rule(), e.details()));
     }
 
     @ExceptionHandler({AccessDeniedException.class, AuthorizationDeniedException.class})

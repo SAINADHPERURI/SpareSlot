@@ -1,0 +1,18 @@
+# build output
+backend/target/
+frontend/node_modules/
+frontend/dist/
+e2e/node_modules/
+e2e/test-results/
+e2e/playwright-report/
+# local environment (never commit secrets)
+.env
+*.env.local
+.idea/
+.vscode/
+*.log
+# local Claude Code worktrees
+.claude/worktrees/
+e2e/.auth/
+e2e/test-results/
+e2e/playwright-report/

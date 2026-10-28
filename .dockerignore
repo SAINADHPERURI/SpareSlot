@@ -1,0 +1,7 @@
+.git
+**/node_modules
+**/dist
+backend/target
+e2e
+*.log
+.env

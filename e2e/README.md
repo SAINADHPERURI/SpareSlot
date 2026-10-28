@@ -32,8 +32,9 @@ Requires Node 22 or later. No packages to install.
 
 ```bash
 cd e2e && npm install
-BASE_URL=http://localhost:3000 npx playwright test            # downloads nothing if PW_CHANNEL is set:
-BASE_URL=http://localhost:3000 PW_CHANNEL=msedge npx playwright test
+npx playwright install chromium                                # once, for Playwright's own browser
+BASE_URL=http://localhost:3000 npx playwright test
+BASE_URL=http://localhost:3000 PW_CHANNEL=msedge npx playwright test   # or use an installed Edge or Chrome
 npx playwright show-report                                     # the HTML report
 ```
 

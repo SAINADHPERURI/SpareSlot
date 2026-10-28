@@ -10,6 +10,9 @@ post-return refund.
 
 All demo data is fictional. No real people, institutions or credentials appear anywhere.
 
+**Live demo:** https://spareslot-sainadh.onrender.com. Open **Judge's tour** in the header, and use the
+**Sign in as** panel on the sign-in page. The API is at https://spareslot-sainadh-api.onrender.com.
+
 ## Run it (one command)
 
 Needs Docker.

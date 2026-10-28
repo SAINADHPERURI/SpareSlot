@@ -14,6 +14,9 @@ spring:
   flyway:
     # db/seed holds the fictional demo data (V90+); set SEED_LOCATION to an empty value to leave it out
     locations: classpath:db/migration${SEED_LOCATION:,classpath:db/seed}
+    # Backend migrations (V10-V19) number below the seed (V90+) by design, so a new backend migration
+    # must still apply on a database that already has the seed.
+    out-of-order: true
   servlet:
     multipart:
       max-file-size: 6MB

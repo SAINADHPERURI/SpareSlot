@@ -4,11 +4,12 @@ import {
   useRef,
   type ButtonHTMLAttributes,
   type InputHTMLAttributes,
+  type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
   type SelectHTMLAttributes,
   type TextareaHTMLAttributes,
 } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { ApiError } from '../api';
 import { label } from '../lib/labels';
 
@@ -17,10 +18,10 @@ import { label } from '../lib/labels';
 type Variant = 'primary' | 'secondary' | 'danger' | 'ghost';
 
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-teal-700 text-white hover:bg-teal-800 border-teal-700',
-  secondary: 'bg-white text-slate-900 hover:bg-slate-100 border-slate-400',
+  primary: 'bg-brand text-white hover:bg-brand-dark border-brand',
+  secondary: 'bg-white text-ink hover:bg-slate-100 border-slate-400',
   danger: 'bg-red-700 text-white hover:bg-red-800 border-red-700',
-  ghost: 'bg-transparent text-teal-800 hover:bg-teal-50 border-transparent',
+  ghost: 'bg-transparent text-brand hover:bg-brand-light border-transparent',
 };
 
 export function Button({
@@ -77,7 +78,7 @@ export function Loading({ what = 'Loading' }: { what?: string }) {
 }
 
 export function Empty({ children }: { children: ReactNode }) {
-  return <p className="rounded-md border border-dashed border-slate-300 bg-white p-4 text-slate-700">{children}</p>;
+  return <p className="rounded-md border border-dashed border-slate-300 bg-mist-soft px-4 py-5 text-center text-slate-700">{children}</p>;
 }
 
 type Tone = 'info' | 'success' | 'warning' | 'error';
@@ -205,7 +206,7 @@ export function Checkbox({ label: text, ...rest }: { label: ReactNode } & InputH
   const id = useId();
   return (
     <div className="flex items-center gap-2">
-      <input id={id} type="checkbox" className="h-5 w-5 rounded border-slate-500 accent-teal-700" {...rest} />
+      <input id={id} type="checkbox" className="h-5 w-5 rounded border-slate-500 accent-brand" {...rest} />
       <label htmlFor={id} className="text-sm text-slate-800">
         {text}
       </label>
@@ -216,14 +217,14 @@ export function Checkbox({ label: text, ...rest }: { label: ReactNode } & InputH
 // ---------------------------------------------------------------- status chips (text + icon, never colour alone)
 
 const BOOKING_CHIPS: Record<string, { icon: string; cls: string }> = {
-  requested: { icon: '◷', cls: 'bg-slate-100 text-slate-900 border-slate-400' },
+  requested: { icon: '◷', cls: 'bg-slate-100 text-ink border-slate-400' },
   waitlisted: { icon: '⋯', cls: 'bg-amber-50 text-amber-950 border-amber-500' },
   approved: { icon: '✓', cls: 'bg-green-50 text-green-950 border-green-600' },
   rejected: { icon: '✕', cls: 'bg-red-50 text-red-950 border-red-500' },
   cancelled: { icon: '⊘', cls: 'bg-slate-100 text-slate-800 border-slate-400' },
   checked_in: { icon: '↗', cls: 'bg-sky-50 text-sky-950 border-sky-600' },
   returned: { icon: '↩', cls: 'bg-indigo-50 text-indigo-950 border-indigo-500' },
-  closed: { icon: '■', cls: 'bg-slate-200 text-slate-900 border-slate-500' },
+  closed: { icon: '■', cls: 'bg-slate-200 text-ink border-slate-500' },
 };
 
 const DEPOSIT_CHIPS: Record<string, { icon: string; cls: string }> = {
@@ -232,18 +233,18 @@ const DEPOSIT_CHIPS: Record<string, { icon: string; cls: string }> = {
   paid: { icon: '●', cls: 'bg-sky-50 text-sky-950 border-sky-600' },
   refunded: { icon: '↩', cls: 'bg-green-50 text-green-950 border-green-600' },
   forfeited: { icon: '✕', cls: 'bg-red-50 text-red-950 border-red-500' },
-  waived: { icon: '✓', cls: 'bg-slate-100 text-slate-900 border-slate-500' },
+  waived: { icon: '✓', cls: 'bg-slate-100 text-ink border-slate-500' },
 };
 
 const GENERIC_CHIPS: Record<string, { icon: string; cls: string }> = {
   pending: { icon: '◷', cls: 'bg-amber-50 text-amber-950 border-amber-500' },
   verified: { icon: '✓', cls: 'bg-green-50 text-green-950 border-green-600' },
   rejected: { icon: '✕', cls: 'bg-red-50 text-red-950 border-red-500' },
-  expired: { icon: '⌛', cls: 'bg-slate-100 text-slate-900 border-slate-500' },
+  expired: { icon: '⌛', cls: 'bg-slate-100 text-ink border-slate-500' },
   open: { icon: '!', cls: 'bg-red-50 text-red-950 border-red-500' },
   under_review: { icon: '◷', cls: 'bg-amber-50 text-amber-950 border-amber-500' },
   resolved: { icon: '✓', cls: 'bg-green-50 text-green-950 border-green-600' },
-  requested: { icon: '◷', cls: 'bg-slate-100 text-slate-900 border-slate-400' },
+  requested: { icon: '◷', cls: 'bg-slate-100 text-ink border-slate-400' },
   approved: { icon: '✓', cls: 'bg-green-50 text-green-950 border-green-600' },
   active: { icon: '✓', cls: 'bg-green-50 text-green-950 border-green-600' },
   suspended: { icon: '⊘', cls: 'bg-red-50 text-red-950 border-red-500' },
@@ -269,7 +270,7 @@ export function DepositChip({ status }: { status: string }) {
 }
 
 export function StateChip({ status, text }: { status: string; text?: string }) {
-  const c = GENERIC_CHIPS[status] ?? { icon: '•', cls: 'bg-slate-100 text-slate-900 border-slate-400' };
+  const c = GENERIC_CHIPS[status] ?? { icon: '•', cls: 'bg-slate-100 text-ink border-slate-400' };
   return <Chip {...c} text={text ?? label(status)} />;
 }
 
@@ -279,7 +280,7 @@ export function OverdueChip() {
 
 export function VerifiedBadge({ verified }: { verified: boolean }) {
   return verified ? (
-    <Chip icon="✓" cls="bg-teal-50 text-teal-950 border-teal-600" text="Verified organisation" />
+    <Chip icon="✓" cls="bg-brand-light text-ink border-brand" text="Verified organisation" />
   ) : (
     <Chip icon="◷" cls="bg-amber-50 text-amber-950 border-amber-500" text="Not verified yet" />
   );
@@ -289,9 +290,9 @@ export function VerifiedBadge({ verified }: { verified: boolean }) {
 
 export function PageHeader({ title, intro, actions }: { title: string; intro?: ReactNode; actions?: ReactNode }) {
   return (
-    <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">{title}</h1>
+        <h1 className="text-2xl font-bold text-ink sm:text-3xl">{title}</h1>
         {intro && <div className="mt-1 max-w-3xl text-slate-700">{intro}</div>}
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
@@ -299,17 +300,42 @@ export function PageHeader({ title, intro, actions }: { title: string; intro?: R
   );
 }
 
-export function Section({ title, children, actions, id }: { title: string; children: ReactNode; actions?: ReactNode; id?: string }) {
+export function Section({
+  title,
+  children,
+  actions,
+  id,
+  intro,
+}: {
+  title: string;
+  children: ReactNode;
+  actions?: ReactNode;
+  id?: string;
+  intro?: ReactNode;
+}) {
   return (
-    <section className="card" aria-labelledby={id}>
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <h2 id={id} className="text-lg font-bold text-slate-900">
-          {title}
-        </h2>
-        {actions}
+    <section className="card scroll-mt-24" aria-labelledby={id ? id + '-title' : undefined} id={id}>
+      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h2 id={id ? id + '-title' : undefined} className="text-lg font-bold text-ink">
+            {title}
+          </h2>
+          {intro && <div className="mt-1 text-sm text-slate-700">{intro}</div>}
+        </div>
+        {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
       </div>
       {children}
     </section>
+  );
+}
+
+/** A heading that groups several sections on a page. */
+export function GroupHeading({ title, intro, id }: { title: string; intro?: ReactNode; id?: string }) {
+  return (
+    <div id={id} className="scroll-mt-24 border-l-4 border-accent pl-3">
+      <h2 className="text-xl font-bold text-ink">{title}</h2>
+      {intro && <p className="text-sm text-slate-700">{intro}</p>}
+    </div>
   );
 }
 
@@ -319,10 +345,130 @@ export function Dl({ items }: { items: [string, ReactNode][] }) {
       {items.map(([k, v]) => (
         <div key={k} className="contents">
           <dt className="text-sm font-semibold text-slate-700">{k}</dt>
-          <dd className="text-slate-900">{v}</dd>
+          <dd className="text-ink">{v}</dd>
         </div>
       ))}
     </dl>
+  );
+}
+
+// ---------------------------------------------------------------- tabs
+
+export interface TabDef {
+  id: string;
+  label: ReactNode;
+  content: ReactNode;
+}
+
+/**
+ * Accessible tabs (tablist, tab, tabpanel; arrow keys, Home and End move between tabs). The selected tab lives in
+ * the URL as ?tab=<id> so links and the browser's back button can target it.
+ */
+export function Tabs({ tabs, label: ariaLabel, param = 'tab' }: { tabs: TabDef[]; label: string; param?: string }) {
+  const [params, setParams] = useSearchParams();
+  const baseId = useId();
+  const refs = useRef<(HTMLButtonElement | null)[]>([]);
+  const location = useLocation();
+  // ?tab= wins; an old-style #section link also selects its tab
+  const requested = params.get(param) ?? (location.hash ? location.hash.slice(1) : null);
+  const current = tabs.find((t) => t.id === requested) ?? tabs[0];
+
+  const select = (id: string, focus = false) => {
+    const next = new URLSearchParams(params);
+    if (id === tabs[0].id) next.delete(param);
+    else next.set(param, id);
+    setParams(next, { replace: true, preventScrollReset: true });
+    if (focus) refs.current[tabs.findIndex((t) => t.id === id)]?.focus();
+  };
+
+  const onKey = (e: ReactKeyboardEvent, index: number) => {
+    const last = tabs.length - 1;
+    const to =
+      e.key === 'ArrowRight' ? (index === last ? 0 : index + 1)
+      : e.key === 'ArrowLeft' ? (index === 0 ? last : index - 1)
+      : e.key === 'Home' ? 0
+      : e.key === 'End' ? last
+      : null;
+    if (to === null) return;
+    e.preventDefault();
+    select(tabs[to].id, true);
+  };
+
+  return (
+    <div>
+      <div role="tablist" aria-label={ariaLabel} className="flex flex-wrap gap-1 border-b border-slate-300 sm:flex-nowrap sm:overflow-x-auto">
+        {tabs.map((t, i) => {
+          const selected = t.id === current.id;
+          return (
+            <button
+              key={t.id}
+              ref={(el) => {
+                refs.current[i] = el;
+              }}
+              role="tab"
+              type="button"
+              id={`${baseId}-tab-${t.id}`}
+              aria-selected={selected}
+              aria-controls={`${baseId}-panel-${t.id}`}
+              tabIndex={selected ? 0 : -1}
+              onClick={() => select(t.id)}
+              onKeyDown={(e) => onKey(e, i)}
+              className={`-mb-px min-h-[44px] whitespace-nowrap rounded-t-md border-b-[3px] px-4 py-2 text-sm font-semibold ${
+                selected ? 'border-brand bg-mist text-ink' : 'border-transparent text-slate-700 hover:bg-white hover:text-ink'
+              }`}
+            >
+              {t.label}
+            </button>
+          );
+        })}
+      </div>
+      <div
+        role="tabpanel"
+        id={`${baseId}-panel-${current.id}`}
+        aria-labelledby={`${baseId}-tab-${current.id}`}
+        tabIndex={0}
+        className="pt-5 focus-visible:outline-offset-4"
+      >
+        {current.content}
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------- waitlist
+
+/**
+ * A waitlisted booking's stored reason is a snapshot taken when the request was made and never changes; the
+ * live position is worked out on every load. They are labelled apart so they never look like a contradiction.
+ */
+export function WaitlistInfo({
+  reason,
+  position,
+  size,
+  explanation,
+  compact,
+  staff,
+}: {
+  reason: string | null;
+  position: number;
+  size: number;
+  explanation?: string;
+  compact?: boolean;
+  /** staff read about someone else's request */
+  staff?: boolean;
+}) {
+  return (
+    <div className={compact ? 'mt-2 space-y-1 text-sm' : 'space-y-2'}>
+      <p className="font-semibold text-amber-950">
+        {staff ? 'Position now' : 'Your position now'}: number {position} of {size}
+      </p>
+      {reason && (
+        <p className="text-slate-700">
+          <span className="font-semibold">{staff ? 'When it was waitlisted' : 'At the time of your request'}:</span> “{reason}”
+        </p>
+      )}
+      {explanation && !compact && <p className="text-sm text-slate-700">{explanation}</p>}
+    </div>
   );
 }
 
@@ -356,7 +502,7 @@ export function Dialog({
     };
   }, []);
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/50 p-0 sm:items-center sm:p-4">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/60 p-0 sm:items-center sm:p-4">
       <div
         ref={ref}
         role="dialog"

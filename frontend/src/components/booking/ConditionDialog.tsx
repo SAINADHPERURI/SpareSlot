@@ -72,14 +72,14 @@ export function ConditionDialog({
           <legend className="mb-2 text-sm font-semibold text-slate-800">Condition (required)</legend>
           <div className="space-y-2">
             {RATINGS.map((r) => (
-              <label key={r.value} className="flex cursor-pointer items-start gap-3 rounded-md border border-slate-300 p-3 has-[:checked]:border-teal-700 has-[:checked]:bg-teal-50">
+              <label key={r.value} className="flex cursor-pointer items-start gap-3 rounded-md border border-slate-300 p-3 has-[:checked]:border-brand has-[:checked]:bg-brand-light">
                 <input
                   type="radio"
                   name="rating"
                   value={r.value}
                   checked={rating === r.value}
                   onChange={() => setRating(r.value)}
-                  className="mt-1 h-5 w-5 accent-teal-700"
+                  className="mt-1 h-5 w-5 accent-brand"
                 />
                 <span>
                   <span className="block font-semibold">{r.text}</span>

@@ -57,7 +57,7 @@ const STEPS: Step[] = [
     title: 'Get the deposit back',
     what: 'If the item came back as it left and no incident is open, staff refund it. Forfeit needs a resolved damage incident. The suggestion is advice only: a person decides.',
     who: 'dev.manager' + D,
-    link: { to: '/staff#deposits', text: 'Deposits to resolve' },
+    link: { to: '/staff?view=settle', text: 'Deposits to resolve' },
   },
   {
     title: 'Read the full history',
@@ -88,7 +88,7 @@ export function TourPage() {
       <ol className="space-y-4">
         {STEPS.map((s, i) => (
           <li key={s.title} className="card flex gap-4">
-            <span aria-hidden="true" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-700 text-lg font-bold text-white">
+            <span aria-hidden="true" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand text-lg font-bold text-white">
               {i + 1}
             </span>
             <div className="min-w-0">

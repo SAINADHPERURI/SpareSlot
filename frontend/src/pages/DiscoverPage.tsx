@@ -59,7 +59,8 @@ export function DiscoverPage() {
       />
       <form
         role="search"
-        className="card mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_auto]"
+        aria-label="Find resources"
+        className="card mb-8 grid items-end gap-4 sm:grid-cols-2 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1.3fr)_auto]"
         onSubmit={(e) => {
           e.preventDefault();
           update({ q: text.trim() });
@@ -79,15 +80,13 @@ export function DiscoverPage() {
             </option>
           ))}
         </SelectField>
-        <div className="flex items-end">
-          <Button type="submit" className="w-full">
-            Search
-          </Button>
-        </div>
+        <Button type="submit" className="w-full sm:col-span-2 lg:col-span-1">
+          Search
+        </Button>
         {isUser && (
-          <div className="sm:col-span-2 lg:col-span-4">
+          <div className="rounded-md bg-mist-soft px-3 py-2 sm:col-span-2 lg:col-span-4">
             <Checkbox
-              label="Only show what I am eligible for (uses my verified credentials)"
+              label="Eligible for me: only show what my verified credentials allow"
               checked={eligible}
               onChange={(e) => update({ eligible: e.target.checked ? 'true' : '' })}
             />
@@ -108,7 +107,7 @@ export function DiscoverPage() {
               {eligible ? 'Untick “Only show what I am eligible for” to see everything, then get verified for what you need.' : 'Try fewer words or another category.'}
             </Empty>
           ) : (
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {results.data.items.map((r) => (
                 <li key={r.id}>
                   <ResourceCardView r={r} />

@@ -9,7 +9,7 @@ import { ErrorAlert, Loading, Section } from '../ui';
 export function EventItem({ e, children }: { e: AuditEvent; children?: ReactNode }) {
   return (
     <li className="relative">
-      <span aria-hidden="true" className="absolute -left-[1.4rem] top-1.5 h-3 w-3 rounded-full border-2 border-teal-700 bg-white" />
+      <span aria-hidden="true" className="absolute -left-[1.4rem] top-1.5 h-3 w-3 rounded-full border-2 border-brand bg-white" />
       <p className="font-semibold">
         {actionLabel(e.action)}
         {e.fromStatus && e.toStatus && (
@@ -23,7 +23,7 @@ export function EventItem({ e, children }: { e: AuditEvent; children?: ReactNode
       <p className="text-sm text-slate-700">
         {e.actorName} <span>({label(e.actorRole)})</span> · <time dateTime={e.at}>{when(e.at)}</time>
       </p>
-      {e.reason && <p className="mt-0.5 text-sm text-slate-900">“{e.reason}”</p>}
+      {e.reason && <p className="mt-0.5 text-sm text-ink">“{e.reason}”</p>}
       {children}
     </li>
   );

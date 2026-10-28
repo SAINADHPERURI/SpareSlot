@@ -18,20 +18,21 @@ export function ResourceCardView({ r }: { r: ResourceCard }) {
   return (
     <article className="card flex h-full flex-col overflow-hidden p-0 sm:p-0">
       {r.coverPhotoId ? (
-        <img src={api.listingPhotoUrl(r.coverPhotoId)} alt={`Photo of ${r.name}`} className="aspect-[16/9] w-full object-cover" loading="lazy" />
+        <img src={api.listingPhotoUrl(r.coverPhotoId)} alt={`Photo of ${r.name}`} className="aspect-[5/2] w-full object-cover" loading="lazy" />
       ) : (
-        <div className="flex aspect-[16/9] w-full items-center justify-center bg-mist text-sm font-semibold text-brand-dark" aria-hidden="true">
+        <div className="flex aspect-[5/2] w-full items-center justify-center gap-2 bg-mist text-sm font-semibold text-brand-dark" aria-hidden="true">
+          <span className="text-2xl">{r.category === 'space' ? '⌂' : '⚙'}</span>
           {label(r.category)}
         </div>
       )}
       <div className="flex flex-1 flex-col gap-3 p-4">
         <div>
-          <p className="eyebrow">
-            {label(r.category)} · {r.orgName}
+          <p className="eyebrow">{label(r.category)}</p>
+          <p className="text-sm text-slate-700">
+            {r.orgName}
             {r.orgVerified && (
-              <span className="normal-case tracking-normal text-brand-dark">
-                {' '}
-                <span aria-hidden="true">✓</span> verified
+              <span className="ml-1 whitespace-nowrap font-semibold text-brand-dark">
+                <span aria-hidden="true">✓</span> Verified
               </span>
             )}
           </p>

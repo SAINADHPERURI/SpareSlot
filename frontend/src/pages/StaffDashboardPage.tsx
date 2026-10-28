@@ -25,7 +25,7 @@ function CountTile({ t, active }: { t: Tile; active: boolean }) {
       to={`?${next.toString()}`}
       preventScrollReset
       aria-label={`${t.n} ${t.text}: show the list`}
-      className={`card block h-full no-underline transition hover:-translate-y-0.5 hover:border-brand hover:no-underline ${
+      className={`card block h-full min-h-[9rem] no-underline transition hover:-translate-y-0.5 hover:border-brand hover:no-underline ${
         active ? 'border-brand ring-2 ring-accent' : ''
       }`}
     >

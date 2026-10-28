@@ -396,7 +396,7 @@ export function Tabs({ tabs, label: ariaLabel, param = 'tab' }: { tabs: TabDef[]
 
   return (
     <div>
-      <div role="tablist" aria-label={ariaLabel} className="flex gap-1 overflow-x-auto border-b border-slate-300">
+      <div role="tablist" aria-label={ariaLabel} className="flex flex-wrap gap-1 border-b border-slate-300 sm:flex-nowrap sm:overflow-x-auto">
         {tabs.map((t, i) => {
           const selected = t.id === current.id;
           return (

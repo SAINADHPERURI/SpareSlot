@@ -160,6 +160,7 @@ function Overview({ d }: { d: BookingDetail }) {
           ]}
         />
       </Section>
+      {['approved', 'checked_in', 'returned', 'closed'].includes(b.status) && (
       <Section title="Condition records" intro="Recorded by staff at pickup and at return.">
         {d.conditions.length === 0 ? (
           <Empty>No condition recorded yet. Staff record it at pickup.</Empty>
@@ -178,6 +179,7 @@ function Overview({ d }: { d: BookingDetail }) {
           </div>
         )}
       </Section>
+      )}
       {d.resourceConditions && (
         <Section title="Conditions of use">
           <p className="whitespace-pre-line text-slate-800">{d.resourceConditions}</p>

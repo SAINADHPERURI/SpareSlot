@@ -88,7 +88,7 @@ export function TourPage() {
       <ol className="space-y-4">
         {STEPS.map((s, i) => (
           <li key={s.title} className="card flex gap-4">
-            <span aria-hidden="true" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-700 text-lg font-bold text-white">
+            <span aria-hidden="true" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand text-lg font-bold text-white">
               {i + 1}
             </span>
             <div className="min-w-0">

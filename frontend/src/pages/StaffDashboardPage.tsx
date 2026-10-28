@@ -48,12 +48,12 @@ export function StaffDashboardPage() {
           <li key={text}>
             {href.startsWith('#') ? (
               <a href={href} className="card block h-full no-underline hover:no-underline">
-                <span className="block text-2xl font-bold text-slate-900">{n}</span>
+                <span className="block text-2xl font-bold text-ink">{n}</span>
                 <span className="block text-sm text-slate-800">{text}</span>
               </a>
             ) : (
               <Link to={href} className="card block h-full no-underline hover:no-underline">
-                <span className="block text-2xl font-bold text-slate-900">{n}</span>
+                <span className="block text-2xl font-bold text-ink">{n}</span>
                 <span className="block text-sm text-slate-800">{text}</span>
               </Link>
             )}

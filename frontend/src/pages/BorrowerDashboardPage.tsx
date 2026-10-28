@@ -86,7 +86,7 @@ export function BorrowerDashboardPage() {
                       <Link to={`/resources/${w.resourceId}`}>{w.resourceName}</Link>: {hours(w.hours)} of {w.weeklyHourCap} this week
                     </p>
                     <div className="mt-1 h-2 rounded bg-slate-200" role="presentation">
-                      <div className="h-2 rounded bg-teal-700" style={{ width: pct + '%' }} />
+                      <div className="h-2 rounded bg-brand" style={{ width: pct + '%' }} />
                     </div>
                   </li>
                 );

@@ -11,3 +11,5 @@ e2e/playwright-report/
 .idea/
 .vscode/
 *.log
+# local Claude Code worktrees
+.claude/worktrees/

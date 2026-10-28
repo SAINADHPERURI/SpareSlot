@@ -20,7 +20,7 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   projects: [
-    { name: 'desktop', use: { ...devices['Desktop Chrome'], channel } },
+    { name: 'desktop', use: { ...devices['Desktop Chrome'], channel }, testIgnore: /responsive.spec.ts/ },
     { name: 'phone', use: { ...devices['Pixel 5'], channel }, testMatch: /responsive\.spec\.ts/ },
   ],
 });

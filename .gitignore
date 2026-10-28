@@ -14,3 +14,5 @@ e2e/playwright-report/
 # local Claude Code worktrees
 .claude/worktrees/
 e2e/.auth/
+e2e/test-results/
+e2e/playwright-report/

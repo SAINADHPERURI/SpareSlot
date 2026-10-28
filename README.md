@@ -90,8 +90,10 @@ The app also has this tour built in: **Judge's tour** in the header.
 
 Also worth a look in the seeded data:
 
-- **Waitlist:** the *Workbench space* queue. As Asha or Kabir, the booking shows your position and how the queue
-  is ordered (fewest hours in the last 30 days, then the earliest request).
+- **Waitlist:** the *Portable LED light set* queue. As Asha or Zoya, the booking shows the reason saved when you
+  asked, your position now, and how the queue is ordered (fewest hours in the last 30 days, then the earliest
+  request). A request still waitlisted after 24 hours, or past its start time, is closed by the system with a
+  reason, and the borrower can request again: the older *Workbench space* queue shows this.
 - **Overdue:** Kabir's soldering station. The system raised a delay incident on its own and notified both sides.
 - **Damage and deposit:** as **Tara**, Meera's camera kit booking. The check-in and return photos sit side by side.
   The refund and forfeit both wait while the damage incident is open. Kabir's earlier camera booking shows a

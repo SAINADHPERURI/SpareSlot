@@ -18,7 +18,8 @@ public class WaitlistQueries {
     public static final String ORDER_EXPLANATION =
             "The queue is ordered by hours used in the last 30 days (fewest first), then by when the request was made "
                     + "(earliest first). If an approved booking in this slot is cancelled, the first request in the queue "
-                    + "that fits is approved automatically and staff are told.";
+                    + "that fits is approved automatically and staff are told. A request still on the waitlist after "
+                    + "24 hours, or once its start time has passed, is closed automatically, and you can request again.";
 
     private final JdbcClient jdbc;
 

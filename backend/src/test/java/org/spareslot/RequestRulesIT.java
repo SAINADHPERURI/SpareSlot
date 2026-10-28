@@ -154,12 +154,12 @@ class RequestRulesIT extends ApiTestBase {
         decide(org.manager(), past, "approve", "Past usage");
         var heavyReq = request(heavy, kit, w);
         assertThat(heavyReq.at("/booking/status").asText()).isEqualTo("waitlisted");
-        assertThat(heavyReq.at("/booking/decisionReason").asText()).isEqualTo("Slot taken; you are number 1 in the queue");
+        assertThat(heavyReq.at("/booking/decisionReason").asText()).isEqualTo("Slot taken; you joined the waitlist at number 1");
 
         var light = borrower();
         var lightReq = request(light, kit, w);
         assertThat(lightReq.at("/booking/status").asText()).isEqualTo("waitlisted");
-        assertThat(lightReq.at("/booking/decisionReason").asText()).isEqualTo("Slot taken; you are number 1 in the queue");
+        assertThat(lightReq.at("/booking/decisionReason").asText()).isEqualTo("Slot taken; you joined the waitlist at number 1");
         UUID lightId = UUID.fromString(lightReq.at("/booking/id").asText());
         UUID heavyId = UUID.fromString(heavyReq.at("/booking/id").asText());
         assertThat(get("/api/bookings/" + heavyId, heavy).at("/booking/queue/position").asInt()).isEqualTo(2);

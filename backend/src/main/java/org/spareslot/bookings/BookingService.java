@@ -136,7 +136,7 @@ public class BookingService {
         if (bookings.liveOverlap(r.id(), f.startAt(), f.endAt(), null)) {
             var b = bookings.find(id);
             int position = waitlist.positionIfWaitlisted(b);
-            transition(id, "waitlisted", "Slot taken; you are number " + position + " in the queue", Actor.SYSTEM);
+            transition(id, "waitlisted", "Slot taken; you joined the waitlist at number " + position, Actor.SYSTEM);
         }
         return id;
     }
@@ -215,7 +215,7 @@ public class BookingService {
                     + (depositPending ? " Pay the " + Labels.rupees(b.resourceDepositMinor()) + " deposit before pickup." : "");
             case "rejected" -> "Not approved: " + what + ". Reason: " + why;
             case "waitlisted" -> "Waitlisted: " + what + ". " + why;
-            case "cancelled" -> "Cancelled by staff: " + what + ". Reason: " + why;
+            case "cancelled" -> ("system".equals(role) ? "Request closed: " + what + ". " : "Cancelled by staff: " + what + ". Reason: ") + why;
             case "checked_in" -> "Checked out to you: " + b.resourceName() + ". Return it by " + Labels.when(b.endAt()) + ".";
             case "returned" -> "Return recorded for " + b.resourceName() + ". Thank you.";
             case "closed" -> "Booking closed: " + what + ".";
@@ -351,7 +351,7 @@ public class BookingService {
         for (UUID otherId : competing) {
             int position = waitlist.positionIfWaitlisted(bookings.find(otherId));
             transition(otherId, "waitlisted",
-                    "Slot taken by an approved booking; you are number " + position + " in the queue", Actor.SYSTEM);
+                    "Slot taken by an approved booking; you joined the waitlist at number " + position, Actor.SYSTEM);
         }
     }
 

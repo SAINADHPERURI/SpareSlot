@@ -134,6 +134,42 @@ class AuthAndJobsIT extends ApiTestBase {
     }
 
     @Test
+    void aRequestStillWaitlistedAfter24HoursIsClosedAndTheBorrowerCanAskAgain() throws Exception {
+        var org = org(true);
+        UUID kit = resource(org, 0, 4, 40);
+        var holder = borrower();
+        var ann = borrower();
+        var w = window(5, 10, 2);
+        decide(org.manager(), requestId(holder, kit, w), "approve", "OK");
+        UUID stale = requestId(ann, kit, w);
+        UUID fresh = requestId(borrower(), kit, w);
+        UUID started = requestId(borrower(), kit, w);
+        assertThat(status(stale)).isEqualTo("waitlisted");
+        // joined the waitlist 25 hours ago (only the timestamp moves; the status is untouched)
+        jdbc.sql("UPDATE bookings SET decided_at = now() - interval '25 hours' WHERE id = :b").param("b", stale).update();
+        jdbc.sql("UPDATE bookings SET start_at = now() - interval '1 hour', end_at = now() + interval '1 hour' WHERE id = :b")
+                .param("b", started).update();
+
+        var job = new org.spareslot.jobs.WaitlistExpiryJob(jdbc, bookingService);
+        assertThat(job.expire()).isEqualTo(2);
+        assertThat(status(stale)).isEqualTo("cancelled");
+        assertThat(status(started)).isEqualTo("cancelled");
+        assertThat(status(fresh)).isEqualTo("waitlisted");
+
+        var event = jdbc.sql("SELECT actor_role || '|' || reason FROM audit_events WHERE entity_id = :b AND action = 'booking.cancelled'")
+                .param("b", stale).query(String.class).single();
+        assertThat(event).isEqualTo("system|Still on the waitlist after 24 hours, so this request was closed. "
+                + "You can make a new request at any time.");
+        long told = jdbc.sql("SELECT count(*) FROM notifications WHERE user_id = :u AND entity_id = :b AND message LIKE 'Request closed:%'")
+                .param("u", ann.id()).param("b", stale).query(Long.class).single();
+        assertThat(told).isEqualTo(1);
+        // the borrower may request again (here: a free window)
+        assertThat(request(ann, kit, window(6, 10, 2)).at("/booking/status").asText()).isEqualTo("requested");
+    }
+
+    @Autowired org.spareslot.bookings.BookingService bookingService;
+
+    @Test
     void theOverdueJobRaisesOneDelayIncidentAndNotifiesBothParties() throws Exception {
         var org = org(true);
         UUID kit = resource(org, 0);

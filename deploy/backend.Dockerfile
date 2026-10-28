@@ -16,4 +16,5 @@ USER spareslot
 EXPOSE 8080
 # Configuration comes only from the environment: DATABASE_URL, DATABASE_USERNAME, DATABASE_PASSWORD,
 # JWT_SECRET, CORS_ORIGINS, DEMO_LOGIN_ENABLED, PORT.
-ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75", "-jar", "/app/app.jar"]
+# sized for small containers (512 MB on free hosting plans)
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=60", "-XX:+UseSerialGC", "-Xss512k", "-jar", "/app/app.jar"]

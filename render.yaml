@@ -1,0 +1,61 @@
+# Render Blueprint for SpareSlot: PostgreSQL 16, the API (Docker) and the web app (static site).
+# New > Blueprint in the Render dashboard, pick this repository, and Render creates all three.
+#
+# Free-plan notes: the API sleeps after 15 minutes without traffic (.github/workflows/keep-awake.yml pings it);
+# a static site never sleeps and uses no instance hours; the free database expires after 30 days.
+#
+# The two public addresses below assume Render gives the services exactly these names. If Render adds a suffix
+# because a name is taken, correct CORS_ORIGINS (API) and VITE_API_BASE (web) in the dashboard and redeploy.
+
+databases:
+  - name: spareslot-db
+    plan: free
+    postgresMajorVersion: "16"
+    databaseName: spareslot
+    user: spareslot
+
+services:
+  - type: web
+    name: spareslot-sainadh-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./deploy/backend.Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: spareslot-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true          # random, created by Render; never in the repository
+      - key: CORS_ORIGINS
+        value: https://spareslot-sainadh.onrender.com
+      - key: DEMO_LOGIN_ENABLED
+        value: "true"
+
+  - type: web
+    name: spareslot-sainadh
+    runtime: static
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: ./frontend/dist
+    envVars:
+      - key: VITE_API_BASE
+        value: https://spareslot-sainadh-api.onrender.com
+      - key: NODE_VERSION
+        value: "22"
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: same-origin
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+    routes:
+      # single-page app: every path serves index.html
+      - type: rewrite
+        source: /*
+        destination: /index.html

@@ -30,7 +30,7 @@ export function PrivateImage({ path, alt, className = '' }: { path: string; alt:
   }
   return (
     <a href={url} target="_blank" rel="noreferrer" title="Open full size">
-      <img src={url} alt={alt} className={`object-cover ${className}`} />
+      <img src={url} alt={alt} className={className.includes('object-') ? className : `object-cover ${className}`} />
     </a>
   );
 }

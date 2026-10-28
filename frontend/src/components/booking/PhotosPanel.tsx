@@ -14,10 +14,14 @@ export function usePhotos(bookingId: string) {
 function PhotoGrid({ photos, empty }: { photos: BookingPhoto[]; empty: string }) {
   if (photos.length === 0) return <p className="text-sm text-slate-600">{empty}</p>;
   return (
-    <ul className="grid grid-cols-2 gap-2">
+    <ul className="grid gap-3">
       {photos.map((p) => (
         <li key={p.id}>
-          <PrivateImage path={api.bookingPhotoPath(p.id)} alt={p.caption || `Photo by ${p.uploadedByName}`} className="h-28 w-full rounded" />
+          <PrivateImage
+            path={api.bookingPhotoPath(p.id)}
+            alt={p.caption || `Photo by ${p.uploadedByName}`}
+            className="aspect-[16/10] w-full rounded bg-slate-100 object-contain"
+          />
           <p className="mt-1 text-xs text-slate-800">
             {p.caption && <span className="block font-semibold">{p.caption}</span>}
             {p.uploadedByName}, {when(p.createdAt)}

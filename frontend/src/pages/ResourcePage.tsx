@@ -16,6 +16,7 @@ import {
   TextArea,
   TextField,
   VerifiedBadge,
+  WaitlistInfo,
 } from '../components/ui';
 import { useAuth } from '../lib/auth';
 import { hours, localInputToIso, nextHour, rupees, toLocalInput, windowText } from '../lib/format';
@@ -44,19 +45,22 @@ export function ResourcePage() {
         actions={d.canEdit ? <LinkButton to={`/staff/resources/${r.id}/edit`} variant="secondary">Edit listing</LinkButton> : undefined}
       />
 
-      {d.photos.length > 0 && (
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4" aria-label="Listing photos">
-          {d.photos.map((p) => (
-            <li key={p.id}>
-              <img src={api.listingPhotoUrl(p.id)} alt={p.caption || `Photo of ${r.name}`} className="h-36 w-full rounded-md object-cover" />
-              {p.caption && <p className="mt-1 text-sm text-slate-700">{p.caption}</p>}
-            </li>
-          ))}
-        </ul>
-      )}
-
-      <div className="grid gap-6 lg:grid-cols-[3fr_2fr]">
+      <div className="grid items-start gap-6 lg:grid-cols-[3fr_2fr]">
         <div className="space-y-6">
+          {d.photos.length > 0 && (
+            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3" aria-label="Listing photos">
+              {d.photos.map((p) => (
+                <li key={p.id}>
+                  <img
+                    src={api.listingPhotoUrl(p.id)}
+                    alt={p.caption || `Photo of ${r.name}`}
+                    className="aspect-[4/3] w-full rounded-md border border-slate-200 object-cover"
+                  />
+                  {p.caption && <p className="mt-1 text-sm text-slate-700">{p.caption}</p>}
+                </li>
+              ))}
+            </ul>
+          )}
           <Section title="Before you request">
             {r.description && <p className="mb-4 whitespace-pre-line text-slate-800">{r.description}</p>}
             <Dl
@@ -101,7 +105,7 @@ export function ResourcePage() {
             )}
           </Section>
         </div>
-        <div className="space-y-6">
+        <div className="space-y-6 lg:sticky lg:top-24">
           <RequestPanel d={d} />
           <Section title="Already booked">
             {d.bookedWindows.length === 0 ? (
@@ -156,9 +160,8 @@ function RequestPanel({ d }: { d: ResourceDetail }) {
     const q = waitlisted.booking.queue;
     return (
       <Section title="You are on the waitlist">
-        <Alert tone="warning" title={`Slot taken: you are number ${q.position} of ${q.size} in the queue`}>
-          <p>{waitlisted.booking.decisionReason}</p>
-          <p className="mt-2">{q.explanation}</p>
+        <Alert tone="warning" title="Slot taken: your request joined the waitlist">
+          <WaitlistInfo reason={waitlisted.booking.decisionReason} position={q.position} size={q.size} explanation={q.explanation} />
         </Alert>
         <div className="mt-4">
           <LinkButton to={`/bookings/${waitlisted.booking.id}`}>See the request</LinkButton>

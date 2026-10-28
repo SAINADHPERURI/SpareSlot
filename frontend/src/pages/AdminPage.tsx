@@ -5,7 +5,7 @@ import { api } from '../api';
 import type { AdminOrganisation, AdminUser } from '../api/types';
 import { EventItem } from '../components/booking/Timeline';
 import { ReasonDialog } from '../components/ReasonDialog';
-import { Button, Empty, ErrorAlert, Loading, PageHeader, Section, SelectField, StateChip, TextField, VerifiedBadge } from '../components/ui';
+import { Button, Empty, ErrorAlert, Loading, PageHeader, Section, SelectField, StateChip, Tabs, TextField, VerifiedBadge } from '../components/ui';
 import { day } from '../lib/format';
 import { label } from '../lib/labels';
 
@@ -26,15 +26,24 @@ export function AdminPage() {
             ] as [string, number][]
           ).map(([t, n]) => (
             <li key={t} className="card">
-              <span className="block text-2xl font-bold">{n}</span>
-              <span className="text-sm text-slate-800">{t}</span>
+              <span className="block text-3xl font-bold">{n}</span>
+              <span className="text-sm text-slate-700">{t}</span>
             </li>
           ))}
         </ul>
       )}
-      <Organisations />
-      <Users />
-      <AuditLog />
+      <Tabs
+        label="Admin sections"
+        tabs={[
+          {
+            id: 'organisations',
+            label: stats.data?.organisationsAwaiting ? `Organisations (${stats.data.organisationsAwaiting} waiting)` : 'Organisations',
+            content: <Organisations />,
+          },
+          { id: 'users', label: 'Users', content: <Users /> },
+          { id: 'audit', label: 'Audit log', content: <AuditLog /> },
+        ]}
+      />
     </div>
   );
 }

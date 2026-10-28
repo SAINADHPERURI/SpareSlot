@@ -1,0 +1,62 @@
+# One command for the whole app, with fictional demo data:
+#   docker compose -f deploy/docker-compose.yml up --build
+# Then open http://localhost:3000 (API docs: http://localhost:8080/api/docs).
+#
+# Nothing secret is stored here. JWT_SECRET is read from your environment or deploy/.env; when it is missing,
+# this local stack lets the backend pick a random one for the run (tokens end when the backend restarts).
+# The database password below protects a local, throwaway container only.
+name: spareslot
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: spareslot
+      POSTGRES_USER: spareslot
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-spareslot-local-only}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U spareslot -d spareslot"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ../deploy/backend.Dockerfile
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/spareslot
+      DATABASE_USERNAME: spareslot
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-spareslot-local-only}
+      JWT_SECRET: ${JWT_SECRET:-}
+      ALLOW_GENERATED_JWT_SECRET: "true"
+      CORS_ORIGINS: http://localhost:3000,http://localhost:5173
+      DEMO_LOGIN_ENABLED: ${DEMO_LOGIN_ENABLED:-true}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080 && printf \"GET /actuator/health HTTP/1.0\\r\\n\\r\\n\" >&3 && grep -q UP <&3'"]
+      interval: 5s
+      timeout: 5s
+      retries: 40
+      start_period: 20s
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: deploy/frontend.Dockerfile
+    environment:
+      BACKEND_ORIGIN: http://backend:8080
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "${WEB_PORT:-3000}:80"
+
+volumes:
+  pgdata:

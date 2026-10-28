@@ -62,8 +62,20 @@ public class SecurityConfig {
         return c;
     }
 
+    /**
+     * The signing key comes from JWT_SECRET. Only for a local demo (ALLOW_GENERATED_JWT_SECRET=true) may a missing
+     * secret be replaced by a random one; tokens then stop working when the backend restarts.
+     */
     @Bean
-    SecretKey jwtKey(@Value("${spareslot.jwt-secret}") String secret) {
+    SecretKey jwtKey(@Value("${spareslot.jwt-secret}") String secret,
+                     @Value("${spareslot.allow-generated-jwt-secret}") boolean allowGenerated) {
+        if ((secret == null || secret.isBlank()) && allowGenerated) {
+            org.slf4j.LoggerFactory.getLogger(SecurityConfig.class)
+                    .warn("JWT_SECRET is not set; using a random secret for this run only (local demo mode).");
+            byte[] random = new byte[48];
+            new java.security.SecureRandom().nextBytes(random);
+            return new SecretKeySpec(random, "HmacSHA256");
+        }
         if (secret == null || secret.getBytes(StandardCharsets.UTF_8).length < 32) {
             throw new IllegalStateException("Set the JWT_SECRET environment variable to at least 32 characters.");
         }

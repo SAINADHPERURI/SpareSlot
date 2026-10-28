@@ -39,6 +39,7 @@ springdoc:
 
 spareslot:
   jwt-secret: ${JWT_SECRET:}
+  allow-generated-jwt-secret: ${ALLOW_GENERATED_JWT_SECRET:false}
   cors-origins: ${CORS_ORIGINS:http://localhost:5173}
   # The "sign in as" panel on the demo sign-in page. Only accounts whose email ends with this domain qualify.
   demo-login-enabled: ${DEMO_LOGIN_ENABLED:false}

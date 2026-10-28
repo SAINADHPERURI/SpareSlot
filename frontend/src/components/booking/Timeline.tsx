@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../api';
 import type { AuditEvent } from '../../api/types';
@@ -5,7 +6,7 @@ import { when } from '../../lib/format';
 import { actionLabel, label } from '../../lib/labels';
 import { ErrorAlert, Loading, Section } from '../ui';
 
-export function EventItem({ e }: { e: AuditEvent }) {
+export function EventItem({ e, children }: { e: AuditEvent; children?: ReactNode }) {
   return (
     <li className="relative">
       <span aria-hidden="true" className="absolute -left-[1.4rem] top-1.5 h-3 w-3 rounded-full border-2 border-teal-700 bg-white" />
@@ -23,6 +24,7 @@ export function EventItem({ e }: { e: AuditEvent }) {
         {e.actorName} <span>({label(e.actorRole)})</span> · <time dateTime={e.at}>{when(e.at)}</time>
       </p>
       {e.reason && <p className="mt-0.5 text-sm text-slate-900">“{e.reason}”</p>}
+      {children}
     </li>
   );
 }

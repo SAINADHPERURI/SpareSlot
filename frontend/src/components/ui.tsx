@@ -9,7 +9,7 @@ import {
   type SelectHTMLAttributes,
   type TextareaHTMLAttributes,
 } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { ApiError } from '../api';
 import { label } from '../lib/labels';
 
@@ -368,7 +368,9 @@ export function Tabs({ tabs, label: ariaLabel, param = 'tab' }: { tabs: TabDef[]
   const [params, setParams] = useSearchParams();
   const baseId = useId();
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
-  const requested = params.get(param);
+  const location = useLocation();
+  // ?tab= wins; an old-style #section link also selects its tab
+  const requested = params.get(param) ?? (location.hash ? location.hash.slice(1) : null);
   const current = tabs.find((t) => t.id === requested) ?? tabs[0];
 
   const select = (id: string, focus = false) => {
@@ -445,21 +447,24 @@ export function WaitlistInfo({
   size,
   explanation,
   compact,
+  staff,
 }: {
   reason: string | null;
   position: number;
   size: number;
   explanation?: string;
   compact?: boolean;
+  /** staff read about someone else's request */
+  staff?: boolean;
 }) {
   return (
     <div className={compact ? 'mt-2 space-y-1 text-sm' : 'space-y-2'}>
       <p className="font-semibold text-amber-950">
-        Your position now: number {position} of {size}
+        {staff ? 'Position now' : 'Your position now'}: number {position} of {size}
       </p>
       {reason && (
         <p className="text-slate-700">
-          <span className="font-semibold">At the time of your request:</span> “{reason}”
+          <span className="font-semibold">{staff ? 'When it was waitlisted' : 'At the time of your request'}:</span> “{reason}”
         </p>
       )}
       {explanation && !compact && <p className="text-sm text-slate-700">{explanation}</p>}

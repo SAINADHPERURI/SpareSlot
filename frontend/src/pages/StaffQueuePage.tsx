@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '../api';
 import type { BookingSummary } from '../api/types';
 import { ReasonDialog } from '../components/ReasonDialog';
-import { Button, Empty, ErrorAlert, Loading, PageHeader, StatusChip } from '../components/ui';
+import { Button, Empty, ErrorAlert, Loading, PageHeader, StatusChip, WaitlistInfo } from '../components/ui';
 import { hours, windowText } from '../lib/format';
 import { ACTION_BUTTONS } from '../lib/labels';
 
@@ -44,11 +44,7 @@ export function StaffQueuePage() {
                 <p className="mt-1 text-sm">
                   <span className="font-semibold">Purpose:</span> {b.purpose}
                 </p>
-                {b.queue && (
-                  <p className="mt-1 text-sm text-amber-900">
-                    Waitlisted, number {b.queue.position} of {b.queue.size}. {b.decisionReason}
-                  </p>
-                )}
+                {b.queue && <WaitlistInfo compact staff reason={b.decisionReason} position={b.queue.position} size={b.queue.size} />}
               </div>
               <StatusChip status={b.status} />
             </div>
@@ -62,7 +58,7 @@ export function StaffQueuePage() {
             {Object.entries(b.blockedActions)
               .filter(([k]) => (DECISIONS as string[]).includes(k))
               .map(([k, why]) => (
-                <p key={k} className="mt-2 rounded-md border border-slate-300 bg-slate-50 p-2 text-sm">
+                <p key={k} className="mt-2 rounded-md border border-slate-300 bg-mist-soft p-2 text-sm">
                   <span className="font-semibold">{ACTION_BUTTONS[k]} is not possible:</span> {why}
                 </p>
               ))}

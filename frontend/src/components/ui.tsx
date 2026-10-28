@@ -339,19 +339,22 @@ export function Dialog({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const titleId = useId();
+  // callers pass a new onClose on every render; keep the latest in a ref so focus is set only once
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
-    const first = ref.current?.querySelector<HTMLElement>('textarea, input, select, button');
+    const first = ref.current?.querySelector<HTMLElement>('[data-autofocus], form textarea, form input, form select, form button');
     first?.focus();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') onCloseRef.current();
     };
     document.addEventListener('keydown', onKey);
     return () => {
       document.removeEventListener('keydown', onKey);
       previous?.focus();
     };
-  }, [onClose]);
+  }, []);
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/50 p-0 sm:items-center sm:p-4">
       <div

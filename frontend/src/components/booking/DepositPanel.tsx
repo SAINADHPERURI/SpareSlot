@@ -169,6 +169,7 @@ export function DepositPanel({ detail }: { detail: BookingDetail }) {
                 Go back
               </Button>
               <Button
+                data-autofocus
                 busy={payBusy}
                 onClick={async () => {
                   setPayBusy(true);

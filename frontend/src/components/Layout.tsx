@@ -203,7 +203,9 @@ function ServerWaking() {
     let done = false;
     const slow = setTimeout(() => !done && setWaiting(true), 2500);
     const tick = setInterval(() => !done && setSeconds((s) => s + 1), 1000);
+    // read the body too, so the request completes instead of staying open
     fetch(API_BASE + '/api/organisations')
+      .then((res) => res.arrayBuffer())
       .catch(() => undefined)
       .finally(() => {
         done = true;

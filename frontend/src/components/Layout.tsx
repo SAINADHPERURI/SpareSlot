@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '../api';
+import { API_BASE } from '../api/client';
 import type { Notification } from '../api/types';
 import { useAuth } from '../lib/auth';
 import { when } from '../lib/format';
@@ -191,6 +192,43 @@ function UserMenu() {
   );
 }
 
+/**
+ * On free hosting the API sleeps when idle and takes about a minute to wake. If the first call is slow, say so
+ * instead of leaving the page looking frozen; the banner goes away by itself once the API answers.
+ */
+function ServerWaking() {
+  const [waiting, setWaiting] = useState(false);
+  const [seconds, setSeconds] = useState(0);
+  useEffect(() => {
+    let done = false;
+    const slow = setTimeout(() => !done && setWaiting(true), 2500);
+    const tick = setInterval(() => !done && setSeconds((s) => s + 1), 1000);
+    fetch(API_BASE + '/api/organisations')
+      .catch(() => undefined)
+      .finally(() => {
+        done = true;
+        setWaiting(false);
+        clearTimeout(slow);
+        clearInterval(tick);
+      });
+    return () => {
+      done = true;
+      clearTimeout(slow);
+      clearInterval(tick);
+    };
+  }, []);
+  if (!waiting) return null;
+  return (
+    <div role="status" aria-live="polite" className="mb-6 rounded-lg border-2 border-accent bg-mist p-4 text-ink">
+      <p className="font-bold">The demo server is waking up…</p>
+      <p className="text-sm">
+        It runs on free hosting and sleeps when nobody has used it for a while. The first visit takes up to a minute
+        ({seconds} s so far); this page will load by itself. After that everything is quick.
+      </p>
+    </div>
+  );
+}
+
 export function Layout() {
   const { session, signOut } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -302,6 +340,7 @@ export function Layout() {
         )}
       </header>
       <main id="main" className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
+        <ServerWaking />
         <Outlet />
       </main>
       <footer className="mt-8 border-t border-slate-200 bg-white">

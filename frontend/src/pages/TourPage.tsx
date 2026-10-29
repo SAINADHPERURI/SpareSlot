@@ -109,6 +109,56 @@ export function TourPage() {
           </li>
         ))}
       </ol>
+
+      <section className="card mt-8" aria-labelledby="waitlist-try">
+        <h2 id="waitlist-try" className="text-lg font-bold">
+          See the waitlist for yourself (one minute)
+        </h2>
+        <p className="mt-1 text-slate-800">
+          A waitlisted request is closed after 24 hours, so the waitlist is best seen live:
+        </p>
+        <ol className="mt-2 list-decimal space-y-1 pl-6 text-slate-800">
+          <li>
+            Sign in as <span className="font-semibold">zoya.cofounder{D}</span> and open the{' '}
+            <Link to="/resources/30000000-0000-4000-8000-000000000012" className="font-semibold">
+              Portable LED light set
+            </Link>
+            .
+          </li>
+          <li>Under “Already booked”, note a booked window, then request a time that overlaps it.</li>
+          <li>
+            The request joins the waitlist straight away, with your position and how the queue is ordered (fewest hours
+            used in the last 30 days first).
+          </li>
+        </ol>
+      </section>
+
+      <section className="card mt-4" aria-labelledby="ready-made">
+        <h2 id="ready-made" className="text-lg font-bold">
+          Ready-made examples to try
+        </h2>
+        <ul className="mt-2 list-disc space-y-1 pl-6 text-slate-800">
+          <li>
+            <span className="font-semibold">dev.manager{D}</span>: Asha’s laser cutter request is waiting in the{' '}
+            <Link to="/staff/queue" className="font-semibold">
+              requests queue
+            </Link>
+            ; Kabir’s drill set (deposit paid) is ready to check in.
+          </li>
+          <li>
+            <span className="font-semibold">meera.creator{D}</span>: an approved camera kit booking with the ₹500 deposit
+            still to pay (Deposit tab).
+          </li>
+          <li>
+            <span className="font-semibold">tara.studiomanager{D}</span>: Meera’s returned camera kit, with photos from
+            both sides and the deposit held by an open damage incident.
+          </li>
+          <li>
+            <span className="font-semibold">kabir.founder{D}</span>: an overdue soldering station with an automatic
+            delay incident, and a past camera kit booking whose deposit was forfeited.
+          </li>
+        </ul>
+      </section>
     </div>
   );
 }

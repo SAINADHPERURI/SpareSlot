@@ -58,6 +58,15 @@ class DemoSeedIT extends PostgresTestBase {
         List<String> emails = jdbc.sql("SELECT email FROM users").query(String.class).list();
         assertThat(emails).allMatch(e -> e.endsWith(".example") || e.endsWith(".invalid"));
 
+        // long-lived examples (V92) stay current for about ten days
+        long future = jdbc.sql("""
+                SELECT count(*) FROM bookings WHERE start_at > now() + interval '10 days'
+                  AND status IN ('requested', 'approved')
+                """).query(Long.class).single();
+        assertThat(future).isEqualTo(4);
+        assertThat(jdbc.sql("SELECT deposit_status FROM bookings WHERE id = '40000000-0000-4000-8000-000000000023'")
+                .query(String.class).single()).isEqualTo("paid");
+
         // and the schema rules still hold on top of the seed
         assertThat(jdbc.sql("SELECT count(*) FROM organisations WHERE NOT verified").query(Long.class).single()).isEqualTo(1);
     }

@@ -7,7 +7,7 @@ test('a waitlisted borrower sees the reason as history and the live position sep
   await signInAs(page, 'Asha Verma');
   await page.goto('/bookings/40000000-0000-4000-8000-000000000019');
   // the seeded waitlist entry is closed by the system 24 hours after the seed ran (by design)
-  const expired = await page.getByText('Still on the waitlist after 24 hours').first().isVisible().catch(() => false);
+  const expired = await page.getByText(/Still on the waitlist after 24 hours, so this request was closed/).first().isVisible().catch(() => false);
   test.skip(expired, 'the seeded waitlist entry has expired after 24 hours, as designed');
   await expect(page.getByText('At the time of your request:')).toBeVisible();
   await expect(page.getByText(/Your position now: number \d+ of \d+/)).toBeVisible();

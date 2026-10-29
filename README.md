@@ -1024,8 +1024,8 @@ CLAUDE.md                        rules every contributor (and AI session) follow
 
 Significant AI use is disclosed in **[`docs/AI_USE.md`](docs/AI_USE.md)**, file by file: the build contract and
 schema were drafted with Claude (chat), and the application, tests, seed, deployment and documentation were
-generated with Claude Code and reviewed by the team. Commits made with AI assistance are marked
-`Co-Authored-By: Claude`; the history was not squashed.
+generated with Claude Code and reviewed by the team. The history was not squashed; the AI-use log is the record
+of what was generated.
 
 Libraries and their licences are listed in the same file: Spring Boot / Spring Security, Flyway, springdoc-openapi,
 HikariCP, TypeScript and Playwright (Apache 2.0); the PostgreSQL JDBC driver and nginx (BSD-2-Clause); TwelveMonkeys
